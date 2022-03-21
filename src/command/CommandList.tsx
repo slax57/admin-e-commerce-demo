@@ -8,23 +8,36 @@ import {
   ArrayField,
   SingleFieldList,
   ChipField,
+  FunctionField,
 } from "react-admin";
+import CustomerAddressField from "../customer/CustomerAddressField";
+import CustomerField from "../customer/CustomerField";
 
 export const CommandList = () => (
   <List resource="commands" title="Orders">
     <Datagrid rowClick="edit">
-      <TextField source="id" />
+      <DateField source="date" showTime />
       <TextField source="reference" />
-      <DateField source="date" />
       <ReferenceField source="customer_id" reference="customers">
-        <TextField source="id" />
+        <CustomerField />
       </ReferenceField>
-      <ArrayField source="basket">
-        <SingleFieldList>
-          <ChipField source="product_id" />
-        </SingleFieldList>
-      </ArrayField>
-      <NumberField source="total" />
+      <ReferenceField
+        source="customer_id"
+        reference="customers"
+        link={false}
+        label="Address"
+      >
+        <CustomerAddressField />
+      </ReferenceField>
+      <FunctionField
+        label="Nb items"
+        render={(record: { basket: any[] }) => `${record.basket?.length}`}
+        textAlign="right"
+      />
+      <NumberField
+        source="total"
+        options={{ style: "currency", currency: "USD" }}
+      />
     </Datagrid>
   </List>
 );
