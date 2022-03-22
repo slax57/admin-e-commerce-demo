@@ -1,0 +1,167 @@
+import {
+  Stack,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableFooter,
+  TableRow,
+  Typography,
+} from "@mui/material";
+import * as React from "react";
+import {
+  Datagrid,
+  TextField,
+  ReferenceField,
+  Edit,
+  SimpleForm,
+  SelectInput,
+  useRecordContext,
+  DateField,
+  BooleanInput,
+  FunctionField,
+  EmailField,
+  ArrayField,
+  NumberField,
+  FieldTitle,
+  DateInput,
+  Labeled,
+} from "react-admin";
+import { Customer } from "../customer/customer";
+
+const CommandTitle = () => {
+  const record = useRecordContext();
+  return <span>Command {record ? record.reference : ""}</span>;
+};
+
+export const CommandEdit = () => (
+  <Edit resource="commands" title={<CommandTitle />}>
+    <SimpleForm>
+      <Typography variant="h6">Order</Typography>
+      <Labeled label="Date">
+        <DateField source="date" />
+      </Labeled>
+      <Labeled label="Reference">
+        <TextField source="reference" />
+      </Labeled>
+      <SelectInput
+        source="status"
+        choices={[
+          { id: "delivered", name: "delivered" },
+          { id: "ordered", name: "ordered" },
+          { id: "cancelled", name: "cancelled" },
+        ]}
+      />
+      <BooleanInput label="Returned" source="returned" />
+
+      <Typography variant="h6">Customer</Typography>
+      <ReferenceField source="customer_id" reference="customers">
+        <FunctionField
+          render={(customer: Customer) =>
+            `${customer.first_name} ${customer.last_name}`
+          }
+        />
+      </ReferenceField>
+      <ReferenceField source="customer_id" reference="customers">
+        <EmailField source="email" />
+      </ReferenceField>
+
+      <Typography variant="h6">Shipping Address</Typography>
+      <ReferenceField source="customer_id" reference="customers" link={false}>
+        <Stack>
+          <FunctionField
+            render={(customer: Customer) =>
+              `${customer.first_name} ${customer.last_name}`
+            }
+          />
+          <TextField source="address" />
+          <FunctionField
+            render={(customer: Customer) =>
+              [customer.city, customer.zipcode].join(", ")
+            }
+          />
+        </Stack>
+      </ReferenceField>
+
+      <Typography variant="h6">Items</Typography>
+      <ArrayField source="basket">
+        <Datagrid>
+          <ReferenceField
+            source="product_id"
+            reference="products"
+            label="Reference"
+          >
+            <TextField source="reference" />
+          </ReferenceField>
+          <ReferenceField
+            source="product_id"
+            reference="products"
+            label="Unit Price"
+          >
+            <NumberField
+              source="price"
+              options={{ style: "currency", currency: "USD" }}
+            />
+          </ReferenceField>
+          <NumberField label="Quantity" source="quantity" />
+          {/* TODO - Total */}
+        </Datagrid>
+      </ArrayField>
+
+      <Typography variant="h6">Totals</Typography>
+      <TableContainer>
+        <Table>
+          <TableBody>
+            <TableRow key="total_ex_taxes">
+              <TableCell component="th" scope="row">
+                Sum
+              </TableCell>
+              <TableCell align="right">
+                <NumberField
+                  source="total_ex_taxes"
+                  options={{ style: "currency", currency: "USD" }}
+                />
+              </TableCell>
+            </TableRow>
+            <TableRow key="delivery_fees">
+              <TableCell component="th" scope="row">
+                Delivery
+              </TableCell>
+              <TableCell align="right">
+                <NumberField
+                  source="delivery_fees"
+                  options={{ style: "currency", currency: "USD" }}
+                />
+              </TableCell>
+            </TableRow>
+            <TableRow key="taxes">
+              <TableCell component="th" scope="row">
+                <FunctionField
+                  render={(order: { tax_rate: any }) =>
+                    `Tax (${order.tax_rate * 100} %)`
+                  }
+                />
+              </TableCell>
+              <TableCell align="right">
+                <NumberField
+                  source="taxes"
+                  options={{ style: "currency", currency: "USD" }}
+                />
+              </TableCell>
+            </TableRow>
+            <TableRow key="total">
+              <TableCell sx={{ fontWeight: "bold" }}>Total</TableCell>
+              <TableCell align="right" sx={{ fontWeight: "bold" }}>
+                <NumberField
+                  source="total"
+                  options={{ style: "currency", currency: "USD" }}
+                  sx={{ fontWeight: "bold" }}
+                />
+              </TableCell>
+            </TableRow>
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </SimpleForm>
+  </Edit>
+);

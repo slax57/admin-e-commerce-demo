@@ -7,7 +7,7 @@ import {
 } from "react-admin";
 
 export const ProductList = () => (
-  <List resource="products" title="Posters">
+  <List title="Posters">
     <Datagrid rowClick="edit">
       <TextField source="id" />
       <ReferenceField source="category_id" reference="categories">
