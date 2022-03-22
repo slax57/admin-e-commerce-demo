@@ -10,7 +10,7 @@ import {
   ChipField,
   FunctionField,
 } from "react-admin";
-import CustomerAddressField from "../customer/CustomerAddressField";
+import { Customer } from "../customer/customer";
 import CustomerField from "../customer/CustomerField";
 
 export const CommandList = () => (
@@ -27,7 +27,11 @@ export const CommandList = () => (
         link={false}
         label="Address"
       >
-        <CustomerAddressField />
+        <FunctionField
+          render={(customer: Customer) =>
+            [customer.address, customer.city, customer.zipcode].join(", ")
+          }
+        />
       </ReferenceField>
       <FunctionField
         label="Nb items"
