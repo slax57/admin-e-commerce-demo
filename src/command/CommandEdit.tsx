@@ -27,7 +27,10 @@ import {
   FieldTitle,
   DateInput,
   Labeled,
+  RaRecord,
+  WrapperField,
 } from "react-admin";
+import { NumberFunctionField } from "../common/NumberFunctionField";
 import { Customer } from "../customer/customer";
 
 const CommandTitle = () => {
@@ -111,6 +114,19 @@ const CommandEditAddressFragment = () => {
   );
 };
 
+const CommandEditBasketItemTotalFragment = () => {
+  const basketItem = useRecordContext();
+  if (!basketItem) return null;
+  return (
+    <ReferenceField source="product_id" reference="products" link={false}>
+      <NumberFunctionField
+        render={(record: RaRecord) => record.price * basketItem.quantity}
+        options={{ style: "currency", currency: "USD" }}
+      />
+    </ReferenceField>
+  );
+};
+
 const CommandEditBasketFragment = () => {
   return (
     <>
@@ -143,7 +159,9 @@ const CommandEditBasketFragment = () => {
             />
           </ReferenceField>
           <NumberField label="Quantity" source="quantity" />
-          {/* TODO - Total */}
+          <WrapperField label="Total" textAlign="right">
+            <CommandEditBasketItemTotalFragment />
+          </WrapperField>
         </Datagrid>
       </ArrayField>
     </>
