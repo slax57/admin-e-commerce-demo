@@ -1,4 +1,5 @@
 import {
+  Grid,
   Stack,
   Table,
   TableBody,
@@ -38,21 +39,31 @@ const CommandEditOrderFragment = () => {
   return (
     <>
       <Typography variant="h6">Order</Typography>
-      <Labeled label="Date">
-        <DateField source="date" />
-      </Labeled>
-      <Labeled label="Reference">
-        <TextField source="reference" />
-      </Labeled>
-      <SelectInput
-        source="status"
-        choices={[
-          { id: "delivered", name: "delivered" },
-          { id: "ordered", name: "ordered" },
-          { id: "cancelled", name: "cancelled" },
-        ]}
-      />
-      <BooleanInput label="Returned" source="returned" />
+      <Grid container spacing={2} alignItems="center">
+        <Grid item xs={6}>
+          <Labeled label="Date">
+            <DateField source="date" />
+          </Labeled>
+        </Grid>
+        <Grid item xs={6}>
+          <Labeled label="Reference">
+            <TextField source="reference" />
+          </Labeled>
+        </Grid>
+        <Grid item xs={6}>
+          <SelectInput
+            source="status"
+            choices={[
+              { id: "delivered", name: "delivered" },
+              { id: "ordered", name: "ordered" },
+              { id: "cancelled", name: "cancelled" },
+            ]}
+          />
+        </Grid>
+        <Grid item xs={6}>
+          <BooleanInput label="Returned" source="returned" />
+        </Grid>
+      </Grid>
     </>
   );
 };
@@ -61,16 +72,18 @@ const CommandEditCustomerFragment = () => {
   return (
     <>
       <Typography variant="h6">Customer</Typography>
-      <ReferenceField source="customer_id" reference="customers">
-        <FunctionField
-          render={(customer: Customer) =>
-            `${customer.first_name} ${customer.last_name}`
-          }
-        />
-      </ReferenceField>
-      <ReferenceField source="customer_id" reference="customers">
-        <EmailField source="email" />
-      </ReferenceField>
+      <Stack>
+        <ReferenceField source="customer_id" reference="customers">
+          <FunctionField
+            render={(customer: Customer) =>
+              `${customer.first_name} ${customer.last_name}`
+            }
+          />
+        </ReferenceField>
+        <ReferenceField source="customer_id" reference="customers">
+          <EmailField source="email" />
+        </ReferenceField>
+      </Stack>
     </>
   );
 };
@@ -201,11 +214,25 @@ const CommandEditTotalsFragment = () => {
 export const CommandEdit = () => (
   <Edit resource="commands" title={<CommandTitle />}>
     <SimpleForm>
-      <CommandEditOrderFragment />
-      <CommandEditCustomerFragment />
-      <CommandEditAddressFragment />
-      <CommandEditBasketFragment />
-      <CommandEditTotalsFragment />
+      <Grid container spacing={2}>
+        <Grid item xs={8}>
+          <CommandEditOrderFragment />
+        </Grid>
+        <Grid item container xs={4} spacing={2} direction="column">
+          <Grid item>
+            <CommandEditCustomerFragment />
+          </Grid>
+          <Grid item>
+            <CommandEditAddressFragment />
+          </Grid>
+        </Grid>
+        <Grid item xs={12}>
+          <CommandEditBasketFragment />
+        </Grid>
+        <Grid item xs={12}>
+          <CommandEditTotalsFragment />
+        </Grid>
+      </Grid>
     </SimpleForm>
   </Edit>
 );
