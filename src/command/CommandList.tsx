@@ -14,7 +14,7 @@ import {
   NumberInput,
   NullableBooleanInput,
 } from "react-admin";
-import CustomerAddressField from "../customer/CustomerAddressField";
+import { Customer } from "../customer/customer";
 import CustomerField from "../customer/CustomerField";
 import { useSearchParams } from "react-router-dom";
 import { useCallback } from "react";
@@ -74,7 +74,11 @@ export const CommandList = () => {
             link={false}
             label="Address"
           >
-            <CustomerAddressField />
+            <FunctionField
+              render={(customer: Customer) =>
+                [customer.address, customer.city, customer.zipcode].join(", ")
+              }
+            />
           </ReferenceField>
           <FunctionField
             label="Nb items"

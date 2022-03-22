@@ -5,7 +5,10 @@ import { Customer } from "./customer";
 
 export default function () {
   const customer: Customer = useRecordContext();
-  return customer ? (
+
+  if (!customer) return null;
+
+  return (
     <Stack direction="row" spacing={2}>
       <Avatar
         alt={`${customer.first_name} ${customer.last_name}`}
@@ -16,5 +19,5 @@ export default function () {
         {customer.first_name} {customer.last_name}
       </Typography>
     </Stack>
-  ) : null;
+  );
 }
