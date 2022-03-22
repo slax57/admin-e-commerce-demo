@@ -32,7 +32,7 @@ const filters = [
   <NullableBooleanInput label="Returned" source="returned" />,
 ];
 
-export const TabbedCommandList = () => {
+const TabbedCommandList = () => {
   const { filterValues, setFilters, displayedFilters } = useListContext();
 
   const onTabChange = useCallback(
