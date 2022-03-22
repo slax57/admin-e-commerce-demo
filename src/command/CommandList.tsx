@@ -13,10 +13,10 @@ import {
   DateInput,
   NumberInput,
   NullableBooleanInput,
+  useListContext,
 } from "react-admin";
 import { Customer } from "../customer/customer";
 import CustomerField from "../customer/CustomerField";
-import { useSearchParams } from "react-router-dom";
 import { useCallback } from "react";
 
 const filters = [
@@ -32,65 +32,65 @@ const filters = [
   <NullableBooleanInput label="Returned" source="returned" />,
 ];
 
-export const CommandList = () => {
-  const [searchParams, setSearchParams] = useSearchParams();
+export const TabbedCommandList = () => {
+  const { filterValues, setFilters, displayedFilters } = useListContext();
 
   const onTabChange = useCallback(
-    (_, value) => {
-      const updatedSearchParams = new URLSearchParams(searchParams.toString());
-      updatedSearchParams.set("status", value);
-      setSearchParams(updatedSearchParams.toString());
+    (_: any, value: string) => {
+      const updatedFilterValues = { ...filterValues, status: value };
+      setFilters(updatedFilterValues, displayedFilters);
     },
-    [searchParams, setSearchParams]
+    [filterValues, setFilters, displayedFilters]
   );
   const currentTab = useCallback(() => {
-    return searchParams.get("status") || "ordered";
-  }, [searchParams]);
+    return filterValues?.status || "ordered";
+  }, [filterValues]);
 
   return (
-    <List
-      resource="commands"
-      title="Orders"
-      filters={filters}
-      filter={{ status: currentTab() }}
-    >
-      <>
-        <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-          <Tabs value={currentTab()} onChange={onTabChange} variant="fullWidth">
-            <Tab label="Ordered" value="ordered" />
-            <Tab label="Delivered" value="delivered" />
-            <Tab label="Cancelled" value="cancelled" />
-          </Tabs>
-        </Box>
-        <Datagrid rowClick="edit">
-          <DateField source="date" showTime />
-          <TextField source="reference" />
-          <ReferenceField source="customer_id" reference="customers">
-            <CustomerField />
-          </ReferenceField>
-          <ReferenceField
-            source="customer_id"
-            reference="customers"
-            link={false}
-            label="Address"
-          >
-            <FunctionField
-              render={(customer: Customer) =>
-                [customer.address, customer.city, customer.zipcode].join(", ")
-              }
-            />
-          </ReferenceField>
+    <>
+      <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+        <Tabs value={currentTab()} onChange={onTabChange} variant="fullWidth">
+          <Tab label="Ordered" value="ordered" />
+          <Tab label="Delivered" value="delivered" />
+          <Tab label="Cancelled" value="cancelled" />
+        </Tabs>
+      </Box>
+      <Datagrid rowClick="edit">
+        <DateField source="date" showTime />
+        <TextField source="reference" />
+        <ReferenceField source="customer_id" reference="customers">
+          <CustomerField />
+        </ReferenceField>
+        <ReferenceField
+          source="customer_id"
+          reference="customers"
+          link={false}
+          label="Address"
+        >
           <FunctionField
-            label="Nb items"
-            render={(record: { basket: any[] }) => `${record.basket?.length}`}
-            textAlign="right"
+            render={(customer: Customer) =>
+              [customer.address, customer.city, customer.zipcode].join(", ")
+            }
           />
-          <NumberField
-            source="total"
-            options={{ style: "currency", currency: "USD" }}
-          />
-        </Datagrid>
-      </>
+        </ReferenceField>
+        <FunctionField
+          label="Nb items"
+          render={(record: { basket: any[] }) => `${record.basket?.length}`}
+          textAlign="right"
+        />
+        <NumberField
+          source="total"
+          options={{ style: "currency", currency: "USD" }}
+        />
+      </Datagrid>
+    </>
+  );
+};
+
+export const CommandList = () => {
+  return (
+    <List resource="commands" title="Orders" filters={filters}>
+      <TabbedCommandList />
     </List>
   );
 };

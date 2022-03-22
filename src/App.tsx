@@ -5,7 +5,10 @@ import generateData from "data-generator-retail";
 import { ProductList } from "./product/ProductList";
 import { CommandList } from "./command/CommandList";
 
-const dataProvider = fakeDataProvider(generateData({ serializeDate: true }));
+const dataProvider = fakeDataProvider(
+  generateData({ serializeDate: true }),
+  true
+);
 
 function App() {
   return (
