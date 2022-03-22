@@ -14,8 +14,17 @@ const dataProvider = fakeDataProvider(
 function App() {
   return (
     <Admin dataProvider={dataProvider}>
-      <Resource name="products" list={ProductList} />
-      <Resource name="commands" list={CommandList} edit={CommandEdit} />
+      <Resource
+        name="products"
+        options={{ label: "Posters" }}
+        list={ProductList}
+      />
+      <Resource
+        name="commands"
+        options={{ label: "Orders" }}
+        list={CommandList}
+        edit={CommandEdit}
+      />
     </Admin>
   );
 }
