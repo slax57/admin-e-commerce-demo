@@ -5,7 +5,6 @@ import {
   TableBody,
   TableCell,
   TableContainer,
-  TableFooter,
   TableRow,
   Typography,
 } from "@mui/material";
@@ -24,8 +23,6 @@ import {
   EmailField,
   ArrayField,
   NumberField,
-  FieldTitle,
-  DateInput,
   Labeled,
   RaRecord,
   WrapperField,
