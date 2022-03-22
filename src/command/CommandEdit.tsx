@@ -31,12 +31,12 @@ import { Customer } from "../customer/customer";
 
 const CommandTitle = () => {
   const record = useRecordContext();
-  return <span>Command {record ? record.reference : ""}</span>;
+  return <span>Order {record ? record.reference : ""}</span>;
 };
 
-export const CommandEdit = () => (
-  <Edit resource="commands" title={<CommandTitle />}>
-    <SimpleForm>
+const CommandEditOrderFragment = () => {
+  return (
+    <>
       <Typography variant="h6">Order</Typography>
       <Labeled label="Date">
         <DateField source="date" />
@@ -53,7 +53,13 @@ export const CommandEdit = () => (
         ]}
       />
       <BooleanInput label="Returned" source="returned" />
+    </>
+  );
+};
 
+const CommandEditCustomerFragment = () => {
+  return (
+    <>
       <Typography variant="h6">Customer</Typography>
       <ReferenceField source="customer_id" reference="customers">
         <FunctionField
@@ -65,7 +71,13 @@ export const CommandEdit = () => (
       <ReferenceField source="customer_id" reference="customers">
         <EmailField source="email" />
       </ReferenceField>
+    </>
+  );
+};
 
+const CommandEditAddressFragment = () => {
+  return (
+    <>
       <Typography variant="h6">Shipping Address</Typography>
       <ReferenceField source="customer_id" reference="customers" link={false}>
         <Stack>
@@ -82,10 +94,23 @@ export const CommandEdit = () => (
           />
         </Stack>
       </ReferenceField>
+    </>
+  );
+};
 
+const CommandEditBasketFragment = () => {
+  return (
+    <>
       <Typography variant="h6">Items</Typography>
       <ArrayField source="basket">
-        <Datagrid>
+        <Datagrid
+          bulkActionButtons={false}
+          sx={{
+            "& .RaDatagrid-headerCell": { fontWeight: "bold" },
+            width: "100%",
+          }}
+          size="medium"
+        >
           <ReferenceField
             source="product_id"
             reference="products"
@@ -97,6 +122,7 @@ export const CommandEdit = () => (
             source="product_id"
             reference="products"
             label="Unit Price"
+            link={false}
           >
             <NumberField
               source="price"
@@ -107,7 +133,13 @@ export const CommandEdit = () => (
           {/* TODO - Total */}
         </Datagrid>
       </ArrayField>
+    </>
+  );
+};
 
+const CommandEditTotalsFragment = () => {
+  return (
+    <>
       <Typography variant="h6">Totals</Typography>
       <TableContainer>
         <Table>
@@ -162,6 +194,18 @@ export const CommandEdit = () => (
           </TableBody>
         </Table>
       </TableContainer>
+    </>
+  );
+};
+
+export const CommandEdit = () => (
+  <Edit resource="commands" title={<CommandTitle />}>
+    <SimpleForm>
+      <CommandEditOrderFragment />
+      <CommandEditCustomerFragment />
+      <CommandEditAddressFragment />
+      <CommandEditBasketFragment />
+      <CommandEditTotalsFragment />
     </SimpleForm>
   </Edit>
 );
