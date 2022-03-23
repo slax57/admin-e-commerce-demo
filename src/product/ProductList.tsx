@@ -20,9 +20,13 @@ import {
   FilterList,
   FilterListItem,
   FilterLiveSearch,
+  useGetList,
 } from "react-admin";
 import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
 import BarChartIcon from "@mui/icons-material/BarChart";
+import LocalOfferIcon from "@mui/icons-material/LocalOffer";
+import { Category } from "../category/category";
+import { capitalize } from "../common/utils";
 
 const PostPagination = () => <Pagination rowsPerPageOptions={[12, 24, 48]} />;
 
@@ -107,6 +111,24 @@ const StockFilter = () => (
   </FilterList>
 );
 
+const CategoryFilter = () => {
+  const { data: categories } = useGetList<Category>("categories");
+  if (!categories) return null;
+  return (
+    <FilterList label="Categories" icon={<LocalOfferIcon />}>
+      {categories
+        .sort((a, b) => a.name.localeCompare(b.name))
+        .map((category) => (
+          <FilterListItem
+            label={capitalize(category.name)}
+            key={category.id}
+            value={{ category_id: category.id }}
+          />
+        ))}
+    </FilterList>
+  );
+};
+
 const FilterSidebar = () => (
   <Card
     sx={{
@@ -122,6 +144,7 @@ const FilterSidebar = () => (
       <FilterLiveSearch source="q" />
       <SalesFilter />
       <StockFilter />
+      <CategoryFilter />
     </CardContent>
   </Card>
 );
