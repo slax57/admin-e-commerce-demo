@@ -2,11 +2,8 @@ import React from "react";
 import { Admin, Resource, EditGuesser } from "react-admin";
 import fakeDataProvider from "ra-data-fakerest";
 import generateData from "data-generator-retail";
-import { ProductList } from "./product/ProductList";
-import { CommandList } from "./command/CommandList";
-import { CommandEdit } from "./command/CommandEdit";
-import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
-import PhotoSizeSelectActualIcon from "@mui/icons-material/PhotoSizeSelectActual";
+import commands from "./command";
+import products from "./product";
 
 const dataProvider = fakeDataProvider(
   generateData({ serializeDate: true }),
@@ -16,19 +13,8 @@ const dataProvider = fakeDataProvider(
 function App() {
   return (
     <Admin dataProvider={dataProvider}>
-      <Resource
-        name="products"
-        options={{ label: "Posters" }}
-        list={ProductList}
-        icon={PhotoSizeSelectActualIcon}
-      />
-      <Resource
-        name="commands"
-        options={{ label: "Orders" }}
-        list={CommandList}
-        edit={CommandEdit}
-        icon={MonetizationOnIcon}
-      />
+      <Resource name="products" {...products} />
+      <Resource name="commands" {...commands} />
     </Admin>
   );
 }
