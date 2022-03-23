@@ -1,4 +1,6 @@
 import {
+  Card,
+  CardContent,
   ImageList,
   ImageListItem,
   ImageListItemBar,
@@ -15,7 +17,11 @@ import {
   ExportButton,
   SortButton,
   TopToolbar,
+  FilterList,
+  FilterListItem,
 } from "react-admin";
+import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
+import BarChartIcon from "@mui/icons-material/BarChart";
 
 const PostPagination = () => <Pagination rowsPerPageOptions={[12, 24, 48]} />;
 
@@ -26,17 +32,107 @@ const ListActions = () => (
   </TopToolbar>
 );
 
+const SalesFilter = () => (
+  <FilterList label="Sales" icon={<MonetizationOnIcon />}>
+    <FilterListItem
+      label="Best sellers"
+      value={{
+        sales_gt: 25,
+        sales_lte: undefined,
+        sales: undefined,
+      }}
+    />
+    <FilterListItem
+      label="Average"
+      value={{
+        sales_gt: 10,
+        sales_lte: 25,
+        sales: undefined,
+      }}
+    />
+    <FilterListItem
+      label="Low"
+      value={{
+        sales_gt: 0,
+        sales_lte: 10,
+        sales: undefined,
+      }}
+    />
+    <FilterListItem
+      label="Never sold"
+      value={{
+        sales_gt: undefined,
+        sales_lte: undefined,
+        sales: 0,
+      }}
+    />
+  </FilterList>
+);
+
+const StockFilter = () => (
+  <FilterList label="Stock" icon={<BarChartIcon />}>
+    <FilterListItem
+      label="Out of stock"
+      value={{
+        stock_gt: undefined,
+        stock_lt: undefined,
+        stock: 0,
+      }}
+    />
+    <FilterListItem
+      label="1 - 9 items"
+      value={{
+        stock_gt: 0,
+        stock_lt: 10,
+        stock: undefined,
+      }}
+    />
+    <FilterListItem
+      label="10 - 49 items"
+      value={{
+        stock_gt: 10,
+        stock_lt: 50,
+        stock: undefined,
+      }}
+    />
+    <FilterListItem
+      label="50 items &amp; more"
+      value={{
+        stock_gt: 50,
+        stock_lt: undefined,
+        stock: undefined,
+      }}
+    />
+  </FilterList>
+);
+
+const FilterSidebar = () => (
+  <Card
+    sx={{
+      order: -1, // display on the left rather than on the right of the list
+      width: 250,
+      minWidth: 250,
+      mr: 2,
+      mt: "64px",
+      mb: "52px",
+    }}
+  >
+    <CardContent>
+      <SalesFilter />
+      <StockFilter />
+    </CardContent>
+  </Card>
+);
+
 const PosterDataGrid = () => {
   const { data } = useListContext();
-  const isSmall = useMediaQuery((theme: any) => theme.breakpoints.down("sm"));
   const isMedium = useMediaQuery((theme: any) => theme.breakpoints.down("md"));
   const isLarge = useMediaQuery((theme: any) => theme.breakpoints.down("lg"));
   const imageGridCols = useCallback(() => {
-    if (isSmall) return 3;
-    if (isMedium) return 4;
-    if (isLarge) return 6;
-    else return 8;
-  }, [isSmall, isMedium, isLarge]);
+    if (isMedium) return 3;
+    if (isLarge) return 4;
+    else return 6;
+  }, [isMedium, isLarge]);
 
   if (!data) return null;
 
@@ -96,6 +192,7 @@ export const ProductList = () => (
     title="Posters"
     pagination={<PostPagination />}
     actions={<ListActions />}
+    aside={<FilterSidebar />}
   >
     <PosterDataGrid />
   </List>
