@@ -12,9 +12,19 @@ import {
   useListContext,
   WrapperField,
   Pagination,
+  ExportButton,
+  SortButton,
+  TopToolbar,
 } from "react-admin";
 
 const PostPagination = () => <Pagination rowsPerPageOptions={[12, 24, 48]} />;
+
+const ListActions = () => (
+  <TopToolbar>
+    <SortButton fields={["reference", "sales", "stock"]} />
+    <ExportButton />
+  </TopToolbar>
+);
 
 const PosterDataGrid = () => {
   const { data } = useListContext();
@@ -82,7 +92,11 @@ const PosterDataGrid = () => {
 };
 
 export const ProductList = () => (
-  <List title="Posters" pagination={<PostPagination />}>
+  <List
+    title="Posters"
+    pagination={<PostPagination />}
+    actions={<ListActions />}
+  >
     <PosterDataGrid />
   </List>
 );
