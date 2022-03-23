@@ -6,7 +6,6 @@ import {
   ImageListItemBar,
   useMediaQuery,
 } from "@mui/material";
-import { useCallback } from "react";
 import {
   FunctionField,
   List,
@@ -153,11 +152,6 @@ const PosterDataGrid = () => {
   const { data } = useListContext();
   const isMedium = useMediaQuery((theme: any) => theme.breakpoints.down("md"));
   const isLarge = useMediaQuery((theme: any) => theme.breakpoints.down("lg"));
-  const imageGridCols = useCallback(() => {
-    if (isMedium) return 3;
-    if (isLarge) return 4;
-    else return 6;
-  }, [isMedium, isLarge]);
 
   if (!data) return null;
 
@@ -170,7 +164,7 @@ const PosterDataGrid = () => {
       }}
       rowHeight={180}
       gap={1}
-      cols={imageGridCols()}
+      cols={isMedium ? 3 : isLarge ? 4 : 6}
     >
       {data.map((product) => {
         return (
