@@ -1,14 +1,32 @@
-import { ImageList, ImageListItem, ImageListItemBar } from "@mui/material";
+import {
+  ImageList,
+  ImageListItem,
+  ImageListItemBar,
+  useMediaQuery,
+} from "@mui/material";
+import { useCallback } from "react";
 import {
   FunctionField,
   List,
   NumberField,
   useListContext,
   WrapperField,
+  Pagination,
 } from "react-admin";
 
-export const PosterDataGrid = () => {
+const PostPagination = () => <Pagination rowsPerPageOptions={[12, 24, 48]} />;
+
+const PosterDataGrid = () => {
   const { data } = useListContext();
+  const isSmall = useMediaQuery((theme: any) => theme.breakpoints.down("sm"));
+  const isMedium = useMediaQuery((theme: any) => theme.breakpoints.down("md"));
+  const isLarge = useMediaQuery((theme: any) => theme.breakpoints.down("lg"));
+  const imageGridCols = useCallback(() => {
+    if (isSmall) return 3;
+    if (isMedium) return 4;
+    if (isLarge) return 6;
+    else return 8;
+  }, [isSmall, isMedium, isLarge]);
 
   if (!data) return null;
 
@@ -21,7 +39,7 @@ export const PosterDataGrid = () => {
       }}
       rowHeight={180}
       gap={1}
-      cols={3} // TODO: see if I can make this responsive...
+      cols={imageGridCols()}
     >
       {data.map((product) => {
         return (
@@ -64,7 +82,7 @@ export const PosterDataGrid = () => {
 };
 
 export const ProductList = () => (
-  <List title="Posters">
+  <List title="Posters" pagination={<PostPagination />}>
     <PosterDataGrid />
   </List>
 );
