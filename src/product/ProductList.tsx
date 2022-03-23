@@ -19,6 +19,7 @@ import {
   TopToolbar,
   FilterList,
   FilterListItem,
+  FilterLiveSearch,
 } from "react-admin";
 import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
 import BarChartIcon from "@mui/icons-material/BarChart";
@@ -118,6 +119,7 @@ const FilterSidebar = () => (
     }}
   >
     <CardContent>
+      <FilterLiveSearch source="q" />
       <SalesFilter />
       <StockFilter />
     </CardContent>
