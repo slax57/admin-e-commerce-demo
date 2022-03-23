@@ -21,12 +21,6 @@ const PosterDataGrid = () => {
   const isSmall = useMediaQuery((theme: any) => theme.breakpoints.down("sm"));
   const isMedium = useMediaQuery((theme: any) => theme.breakpoints.down("md"));
   const isLarge = useMediaQuery((theme: any) => theme.breakpoints.down("lg"));
-  const imageGridCols = useCallback(() => {
-    if (isSmall) return 3;
-    if (isMedium) return 4;
-    if (isLarge) return 6;
-    else return 8;
-  }, [isSmall, isMedium, isLarge]);
 
   if (!data) return null;
 
@@ -39,7 +33,7 @@ const PosterDataGrid = () => {
       }}
       rowHeight={180}
       gap={1}
-      cols={imageGridCols()}
+      cols={isSmall ? 3 : isMedium ? 4 : isLarge ? 6 : 8}
     >
       {data.map((product) => {
         return (
