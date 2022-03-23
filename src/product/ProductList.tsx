@@ -4,7 +4,6 @@ import {
   ImageListItemBar,
   useMediaQuery,
 } from "@mui/material";
-import { useCallback } from "react";
 import {
   FunctionField,
   List,
