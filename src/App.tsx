@@ -1,9 +1,9 @@
 import React from "react";
-import { Admin, Resource, ListGuesser } from "react-admin";
+import { Admin, Resource, EditGuesser } from "react-admin";
 import fakeDataProvider from "ra-data-fakerest";
 import generateData from "data-generator-retail";
-import { ProductList } from "./product/ProductList";
-import { CommandList } from "./command/CommandList";
+import commands from "./command";
+import products from "./product";
 
 const dataProvider = fakeDataProvider(
   generateData({ serializeDate: true }),
@@ -13,8 +13,8 @@ const dataProvider = fakeDataProvider(
 function App() {
   return (
     <Admin dataProvider={dataProvider}>
-      <Resource name="posters" list={ProductList} />
-      <Resource name="orders" list={CommandList} />
+      <Resource name="products" {...products} />
+      <Resource name="commands" {...commands} />
     </Admin>
   );
 }

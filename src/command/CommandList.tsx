@@ -89,7 +89,7 @@ const TabbedCommandList = () => {
 
 export const CommandList = () => {
   return (
-    <List resource="commands" title="Orders" filters={filters}>
+    <List title="Orders" filters={filters}>
       <TabbedCommandList />
     </List>
   );
