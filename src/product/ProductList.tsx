@@ -20,6 +20,7 @@ import {
   FilterListItem,
   FilterLiveSearch,
   useGetList,
+  Link,
 } from "react-admin";
 import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
 import BarChartIcon from "@mui/icons-material/BarChart";
@@ -168,38 +169,40 @@ const PosterDataGrid = () => {
     >
       {data.map((product) => {
         return (
-          <ImageListItem key={product.id}>
-            <img
-              src={product.thumbnail}
-              alt={product.reference}
-              loading="lazy"
-              style={{ width: "100%", height: "100%", objectFit: "cover" }}
-            />
-            <ImageListItemBar
-              sx={{
-                background:
-                  "linear-gradient(to top, rgba(0,0,0,0.9) 0%, " +
-                  "rgba(0,0,0,0.4) 70%, rgba(0,0,0,0) 100%)",
-              }}
-              title={product.reference}
-              subtitle={
-                <WrapperField>
-                  <FunctionField
-                    record={product}
-                    render={(record: any) =>
-                      `${record.width}x${record.height}, `
-                    }
-                  />
-                  <NumberField
-                    record={product}
-                    source="price"
-                    options={{ style: "currency", currency: "USD" }}
-                  />
-                </WrapperField>
-              }
-              position="bottom"
-            />
-          </ImageListItem>
+          <Link to={`/products/${product.id}`} key={product.id}>
+            <ImageListItem>
+              <img
+                src={product.thumbnail}
+                alt={product.reference}
+                loading="lazy"
+                style={{ width: "100%", height: "100%", objectFit: "cover" }}
+              />
+              <ImageListItemBar
+                sx={{
+                  background:
+                    "linear-gradient(to top, rgba(0,0,0,0.9) 0%, " +
+                    "rgba(0,0,0,0.4) 70%, rgba(0,0,0,0) 100%)",
+                }}
+                title={product.reference}
+                subtitle={
+                  <WrapperField>
+                    <FunctionField
+                      record={product}
+                      render={(record: any) =>
+                        `${record.width}x${record.height}, `
+                      }
+                    />
+                    <NumberField
+                      record={product}
+                      source="price"
+                      options={{ style: "currency", currency: "USD" }}
+                    />
+                  </WrapperField>
+                }
+                position="bottom"
+              />
+            </ImageListItem>
+          </Link>
         );
       })}
     </ImageList>
