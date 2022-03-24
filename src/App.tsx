@@ -15,6 +15,7 @@ function App() {
     <Admin dataProvider={dataProvider}>
       <Resource name="products" {...products} />
       <Resource name="commands" {...commands} />
+      <Resource name="categories" />
     </Admin>
   );
 }

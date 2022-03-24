@@ -9,7 +9,7 @@ import {
   required,
   number,
   NumberInput,
-  SelectField,
+  SelectInput,
   useGetList,
 } from "react-admin";
 import { RichTextInput } from "ra-input-rich-text";
@@ -70,10 +70,12 @@ const ProductEditForm = () => {
             sx={{ width: "7em" }}
           />
         </Stack>
-        <SelectField
+        <SelectInput
           label="category"
           source="category_id"
           choices={categories}
+          validate={required()}
+          sx={{ width: "15em" }}
         />
         <NumberInput
           source="stock"
