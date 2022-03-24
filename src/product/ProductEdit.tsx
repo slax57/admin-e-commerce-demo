@@ -1,4 +1,4 @@
-import { Card, CardMedia, InputAdornment, Stack } from "@mui/material";
+import { Box, Card, CardMedia, InputAdornment, Stack } from "@mui/material";
 import * as React from "react";
 import {
   Edit,
@@ -98,11 +98,13 @@ const ProductEditForm = () => {
       </FormTab>
 
       <FormTab label="description" path="description">
-        <RichTextInput
-          source="description"
-          validate={required()}
-          label={false}
-        />
+        <Box sx={{ maxWidth: "640px" }}>
+          <RichTextInput
+            source="description"
+            validate={required()}
+            label={false}
+          />
+        </Box>
       </FormTab>
     </TabbedForm>
   );
