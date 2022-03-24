@@ -1,4 +1,4 @@
-import { Card, CardMedia, Stack } from "@mui/material";
+import { Card, CardMedia, InputAdornment, Stack } from "@mui/material";
 import * as React from "react";
 import {
   Edit,
@@ -55,17 +55,30 @@ const ProductEditForm = () => {
         />
         <NumberInput
           source="price"
+          InputProps={{
+            startAdornment: <InputAdornment position="start">$</InputAdornment>,
+          }}
           validate={[required(), number()]}
           sx={{ width: "7em" }}
         />
         <Stack direction="row">
           <NumberInput
             source="width"
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="start">cm</InputAdornment>
+              ),
+            }}
             validate={[required(), number()]}
             sx={{ mr: 2, width: "7em" }}
           />
           <NumberInput
             source="height"
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="start">cm</InputAdornment>
+              ),
+            }}
             validate={[required(), number()]}
             sx={{ width: "7em" }}
           />
