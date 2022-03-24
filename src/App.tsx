@@ -16,6 +16,7 @@ function App() {
       <Resource name="products" {...products} />
       <Resource name="commands" {...commands} />
       <Resource name="categories" />
+      <Resource name="reviews" />
     </Admin>
   );
 }
