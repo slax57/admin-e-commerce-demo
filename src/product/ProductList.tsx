@@ -1,4 +1,6 @@
 import {
+  Card,
+  CardContent,
   ImageList,
   ImageListItem,
   ImageListItemBar,
@@ -11,13 +13,143 @@ import {
   useListContext,
   WrapperField,
   Pagination,
+  ExportButton,
+  SortButton,
+  TopToolbar,
+  FilterList,
+  FilterListItem,
+  FilterLiveSearch,
+  useGetList,
 } from "react-admin";
+import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
+import BarChartIcon from "@mui/icons-material/BarChart";
+import LocalOfferIcon from "@mui/icons-material/LocalOffer";
+import { Category } from "../category/category";
+import { capitalize } from "../common/utils";
 
 const PostPagination = () => <Pagination rowsPerPageOptions={[12, 24, 48]} />;
 
+const ListActions = () => (
+  <TopToolbar>
+    <SortButton fields={["reference", "sales", "stock"]} />
+    <ExportButton />
+  </TopToolbar>
+);
+
+const SalesFilter = () => (
+  <FilterList label="Sales" icon={<MonetizationOnIcon />}>
+    <FilterListItem
+      label="Best sellers"
+      value={{
+        sales_gt: 25,
+        sales_lte: undefined,
+        sales: undefined,
+      }}
+    />
+    <FilterListItem
+      label="Average"
+      value={{
+        sales_gt: 10,
+        sales_lte: 25,
+        sales: undefined,
+      }}
+    />
+    <FilterListItem
+      label="Low"
+      value={{
+        sales_gt: 0,
+        sales_lte: 10,
+        sales: undefined,
+      }}
+    />
+    <FilterListItem
+      label="Never sold"
+      value={{
+        sales_gt: undefined,
+        sales_lte: undefined,
+        sales: 0,
+      }}
+    />
+  </FilterList>
+);
+
+const StockFilter = () => (
+  <FilterList label="Stock" icon={<BarChartIcon />}>
+    <FilterListItem
+      label="Out of stock"
+      value={{
+        stock_gt: undefined,
+        stock_lt: undefined,
+        stock: 0,
+      }}
+    />
+    <FilterListItem
+      label="1 - 9 items"
+      value={{
+        stock_gt: 0,
+        stock_lt: 10,
+        stock: undefined,
+      }}
+    />
+    <FilterListItem
+      label="10 - 49 items"
+      value={{
+        stock_gt: 10,
+        stock_lt: 50,
+        stock: undefined,
+      }}
+    />
+    <FilterListItem
+      label="50 items &amp; more"
+      value={{
+        stock_gt: 50,
+        stock_lt: undefined,
+        stock: undefined,
+      }}
+    />
+  </FilterList>
+);
+
+const CategoryFilter = () => {
+  const { data: categories } = useGetList<Category>("categories");
+  if (!categories) return null;
+  return (
+    <FilterList label="Categories" icon={<LocalOfferIcon />}>
+      {categories
+        .sort((a, b) => a.name.localeCompare(b.name))
+        .map((category) => (
+          <FilterListItem
+            label={capitalize(category.name)}
+            key={category.id}
+            value={{ category_id: category.id }}
+          />
+        ))}
+    </FilterList>
+  );
+};
+
+const FilterSidebar = () => (
+  <Card
+    sx={{
+      order: -1, // display on the left rather than on the right of the list
+      width: 250,
+      minWidth: 250,
+      mr: 2,
+      mt: "64px",
+      mb: "52px",
+    }}
+  >
+    <CardContent>
+      <FilterLiveSearch source="q" />
+      <SalesFilter />
+      <StockFilter />
+      <CategoryFilter />
+    </CardContent>
+  </Card>
+);
+
 const PosterDataGrid = () => {
   const { data } = useListContext();
-  const isSmall = useMediaQuery((theme: any) => theme.breakpoints.down("sm"));
   const isMedium = useMediaQuery((theme: any) => theme.breakpoints.down("md"));
   const isLarge = useMediaQuery((theme: any) => theme.breakpoints.down("lg"));
 
@@ -32,7 +164,7 @@ const PosterDataGrid = () => {
       }}
       rowHeight={180}
       gap={1}
-      cols={isSmall ? 3 : isMedium ? 4 : isLarge ? 6 : 8}
+      cols={isMedium ? 3 : isLarge ? 4 : 6}
     >
       {data.map((product) => {
         return (
@@ -75,7 +207,12 @@ const PosterDataGrid = () => {
 };
 
 export const ProductList = () => (
-  <List title="Posters" pagination={<PostPagination />}>
+  <List
+    title="Posters"
+    pagination={<PostPagination />}
+    actions={<ListActions />}
+    aside={<FilterSidebar />}
+  >
     <PosterDataGrid />
   </List>
 );
