@@ -16,6 +16,9 @@ import { DashboardCardHeader } from "./DashboardCardHeader";
 import { useGetList, SimpleList, Link, useGetMany } from "react-admin";
 import { Customer } from "../customer/customer";
 import { Command } from "../command/command";
+import { Review } from "../review/review";
+import { RatingField } from "../review/RatingField";
+import { LineClampTextField } from "../common/LineClampTextField";
 
 const cardSx = {
   minWidth: "230px",
@@ -29,9 +32,15 @@ const getMonthsBeforeNow = function (months: number): Date {
 const oneMonthBeforeNow = getMonthsBeforeNow(1);
 
 export const Dashboard = () => {
-  const pendingReviews = useGetList("reviews", {
+  const pendingReviews = useGetList<Review>("reviews", {
     filter: { status: "pending" },
     pagination: { page: 1, perPage: 25 },
+  });
+  const reviewAuthors = useGetMany<Customer>("customers", {
+    ids:
+      pendingReviews.data && pendingReviews.data.length
+        ? pendingReviews.data.map((review) => review.customer_id)
+        : [],
   });
   const monthlyOrders = useGetList<Command>("commands", {
     filter: { date_gte: oneMonthBeforeNow.toISOString() },
@@ -70,13 +79,50 @@ export const Dashboard = () => {
         </Box>
 
         <Box gridColumn="span 1" gridRow="span 3">
-          <Card component={Paper} sx={{ height: "100%", ...cardSx }}>
-            <CardContent>Pending Reviews</CardContent>
+          <Card component={Paper} sx={cardSx}>
+            <DashboardCardHeader
+              icon={<CommentIcon fontSize="large" color="secondary" />}
+              title="Pending Reviews"
+              content={String(pendingReviews.data?.length || 0)}
+            />
+            <Divider />
+            <SimpleList
+              data={pendingReviews.data}
+              resource="reviews"
+              primaryText={(review) => (
+                <RatingField record={review} label="Rating" sortBy="rating" />
+              )}
+              secondaryText={(review) => (
+                <LineClampTextField record={review} source="comment" />
+              )}
+              leftAvatar={(review) => {
+                if (!reviewAuthors.data) return null;
+                const customer = reviewAuthors.data.find(
+                  (authors) => authors.id === review.customer_id
+                );
+                if (!customer) return null;
+                return (
+                  <Avatar
+                    alt={`${customer.first_name} ${customer.last_name}`}
+                    src={customer.avatar}
+                  />
+                );
+              }}
+            />
+            <Divider />
+            <Button
+              component={Link}
+              to={"/reviews"}
+              fullWidth
+              sx={{ pt: 1, pb: 1 }}
+            >
+              See All Reviews
+            </Button>
           </Card>
         </Box>
 
         <Box gridColumn="span 1" gridRow="span 3">
-          <Card component={Paper} sx={{ height: "100%", ...cardSx }}>
+          <Card component={Paper} sx={cardSx}>
             <DashboardCardHeader
               icon={<PersonAddIcon fontSize="large" color="secondary" />}
               title="New Customers"
@@ -96,6 +142,7 @@ export const Dashboard = () => {
                 />
               )}
             />
+            <Divider />
             <Button
               component={Link}
               to={"/customers"}
