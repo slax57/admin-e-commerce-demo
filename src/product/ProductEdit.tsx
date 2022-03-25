@@ -32,6 +32,7 @@ import { Poster } from "./product";
 import { Category } from "../category/category";
 import CustomerField from "../customer/CustomerField";
 import { RatingField } from "../review/RatingField";
+import { EllipsisTextField } from "../common/EllipsisTextField";
 
 const ProductTitle = () => {
   const record = useRecordContext();
@@ -152,19 +153,7 @@ const ProductEditForm = () => {
               <CustomerField />
             </ReferenceField>
             <RatingField label="Rating" sortBy="rating" />
-            <WrapperField label="Comment">
-              <Box
-                component="div"
-                sx={{
-                  overflow: "hidden",
-                  maxWidth: "20em",
-                  whiteSpace: "nowrap",
-                  textOverflow: "ellipsis",
-                }}
-              >
-                <TextField source="comment" />
-              </Box>
-            </WrapperField>
+            <EllipsisTextField source="comment" />
             <TextField source="status" />
           </Datagrid>
         </ReferenceManyField>
