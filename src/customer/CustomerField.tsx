@@ -3,8 +3,8 @@ import * as React from "react";
 import { useRecordContext } from "react-admin";
 import { Customer } from "./customer";
 
-export default function () {
-  const customer: Customer = useRecordContext();
+export default function (props: { record?: Customer }) {
+  const customer: Customer = useRecordContext(props);
 
   if (!customer) return null;
 
