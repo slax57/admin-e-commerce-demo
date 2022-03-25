@@ -31,14 +31,14 @@ const getMonthsBeforeNow = function (months: number): Date {
 };
 const oneMonthBeforeNow = getMonthsBeforeNow(1);
 
-const computeMonthlyRevenue = function (monthlyOrders?: Command[]): string {
+const computeMonthlyRevenue = function (monthlyOrders?: Command[]): number {
   let amount = 0;
   if (monthlyOrders) {
     amount = monthlyOrders
       .map((order) => order.total)
       .reduce((prev, cur) => prev + cur, 0);
   }
-  return `${amount.toLocaleString()} $US`;
+  return amount;
 };
 
 export const Dashboard = () => {
@@ -73,7 +73,9 @@ export const Dashboard = () => {
             <DashboardCardHeader
               icon={<AttachMoneyIcon fontSize="large" color="secondary" />}
               title="Monthly Revenue"
-              content={computeMonthlyRevenue(monthlyOrders.data)}
+              content={`${computeMonthlyRevenue(
+                monthlyOrders.data
+              ).toLocaleString()} $US`}
             />
           </Card>
         </Box>
