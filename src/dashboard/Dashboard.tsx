@@ -6,13 +6,14 @@ import {
   Box,
   Divider,
   Avatar,
+  Button,
 } from "@mui/material";
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import CommentIcon from "@mui/icons-material/Comment";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import { DashboardCardHeader } from "./DashboardCardHeader";
-import { useGetList, SimpleList } from "react-admin";
+import { useGetList, SimpleList, Link } from "react-admin";
 import { Customer } from "../customer/customer";
 
 const cardSx = {
@@ -97,6 +98,14 @@ export const Dashboard = () => {
                 />
               )}
             />
+            <Button
+              component={Link}
+              to={"/customers"}
+              fullWidth
+              sx={{ pt: 1, pb: 1 }}
+            >
+              See All Customers
+            </Button>
           </Card>
         </Box>
 
