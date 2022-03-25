@@ -13,8 +13,9 @@ import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import CommentIcon from "@mui/icons-material/Comment";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import { DashboardCardHeader } from "./DashboardCardHeader";
-import { useGetList, SimpleList, Link } from "react-admin";
+import { useGetList, SimpleList, Link, useGetMany } from "react-admin";
 import { Customer } from "../customer/customer";
+import { Command } from "../command/command";
 
 const cardSx = {
   minWidth: "230px",
@@ -26,27 +27,24 @@ const getMonthsBeforeNow = function (months: number): Date {
   return d;
 };
 const oneMonthBeforeNow = getMonthsBeforeNow(1);
-const twoMonthsBeforeNow = getMonthsBeforeNow(2);
 
 export const Dashboard = () => {
-  const monthlyOrders = useGetList("commands", {
-    filter: { date_gte: oneMonthBeforeNow.toISOString() },
-  });
-  const pendingOrders = useGetList("commands", {
-    filter: { status: "ordered" },
-    pagination: { page: 1, perPage: 25 },
-  });
   const pendingReviews = useGetList("reviews", {
     filter: { status: "pending" },
     pagination: { page: 1, perPage: 25 },
   });
-  const newCustomers = useGetList<Customer>("customers", {
-    filter: {
-      first_seen_gte: twoMonthsBeforeNow.toISOString(),
-      has_ordered: true,
-    },
-    pagination: { page: 1, perPage: 25 },
+  const monthlyOrders = useGetList<Command>("commands", {
+    filter: { date_gte: oneMonthBeforeNow.toISOString() },
   });
+  const newCustomers = useGetMany<Customer>("customers", {
+    ids:
+      monthlyOrders.data && monthlyOrders.data.length
+        ? monthlyOrders.data.map((order) => order.customer_id)
+        : [],
+  });
+  const pendingOrders = monthlyOrders.data
+    ? monthlyOrders.data.filter((order) => order.status === "ordered")
+    : [];
 
   return (
     <Container sx={{ padding: 2 }}>
@@ -82,7 +80,7 @@ export const Dashboard = () => {
             <DashboardCardHeader
               icon={<PersonAddIcon fontSize="large" color="secondary" />}
               title="New Customers"
-              content={String(newCustomers.total)}
+              content={String(newCustomers.data?.length || 0)}
             />
             <Divider />
             <SimpleList
