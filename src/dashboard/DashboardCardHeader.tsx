@@ -11,6 +11,7 @@ export const DashboardCardHeader = (props: {
     spacing={2}
     justifyContent="space-between"
     alignItems="center"
+    padding={2}
   >
     <Grid item>{props.icon}</Grid>
     <Grid item>

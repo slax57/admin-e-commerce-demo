@@ -52,25 +52,21 @@ export const Dashboard = () => {
       <Box display="grid" gridTemplateColumns="repeat(4, 1fr)" gap={2}>
         <Box gridColumn="span 1">
           <Card component={Paper} sx={cardSx}>
-            <CardContent>
-              <DashboardCardHeader
-                icon={<AttachMoneyIcon fontSize="large" color="secondary" />}
-                title="Monthly Revenue"
-                content="2 481 $US"
-              />
-            </CardContent>
+            <DashboardCardHeader
+              icon={<AttachMoneyIcon fontSize="large" color="secondary" />}
+              title="Monthly Revenue"
+              content="2 481 $US"
+            />
           </Card>
         </Box>
 
         <Box gridColumn="span 1">
           <Card component={Paper} sx={cardSx}>
-            <CardContent>
-              <DashboardCardHeader
-                icon={<ShoppingCartIcon fontSize="large" color="secondary" />}
-                title="New Orders"
-                content="17"
-              />
-            </CardContent>
+            <DashboardCardHeader
+              icon={<ShoppingCartIcon fontSize="large" color="secondary" />}
+              title="New Orders"
+              content="17"
+            />
           </Card>
         </Box>
 
@@ -82,27 +78,25 @@ export const Dashboard = () => {
 
         <Box gridColumn="span 1" gridRow="span 3">
           <Card component={Paper} sx={{ height: "100%", ...cardSx }}>
-            <CardContent>
-              <DashboardCardHeader
-                icon={<PersonAddIcon fontSize="large" color="secondary" />}
-                title="New Customers"
-                content={String(newCustomers.total)}
-              />
-              <Divider />
-              <SimpleList
-                data={newCustomers.data}
-                resource="customers"
-                primaryText={(customer) =>
-                  `${customer.first_name} ${customer.last_name}`
-                }
-                leftAvatar={(customer) => (
-                  <Avatar
-                    alt={`${customer.first_name} ${customer.last_name}`}
-                    src={customer.avatar}
-                  />
-                )}
-              />
-            </CardContent>
+            <DashboardCardHeader
+              icon={<PersonAddIcon fontSize="large" color="secondary" />}
+              title="New Customers"
+              content={String(newCustomers.total)}
+            />
+            <Divider />
+            <SimpleList
+              data={newCustomers.data}
+              resource="customers"
+              primaryText={(customer) =>
+                `${customer.first_name} ${customer.last_name}`
+              }
+              leftAvatar={(customer) => (
+                <Avatar
+                  alt={`${customer.first_name} ${customer.last_name}`}
+                  src={customer.avatar}
+                />
+              )}
+            />
           </Card>
         </Box>
 
