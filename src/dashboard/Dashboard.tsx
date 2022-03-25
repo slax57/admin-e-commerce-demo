@@ -31,6 +31,16 @@ const getMonthsBeforeNow = function (months: number): Date {
 };
 const oneMonthBeforeNow = getMonthsBeforeNow(1);
 
+const computeMonthlyRevenue = function (monthlyOrders?: Command[]): string {
+  let amount = 0;
+  if (monthlyOrders) {
+    amount = monthlyOrders
+      .map((order) => order.total)
+      .reduce((prev, cur) => prev + cur, 0);
+  }
+  return `${amount.toLocaleString()} $US`;
+};
+
 export const Dashboard = () => {
   const pendingReviews = useGetList<Review>("reviews", {
     filter: { status: "pending" },
@@ -63,7 +73,7 @@ export const Dashboard = () => {
             <DashboardCardHeader
               icon={<AttachMoneyIcon fontSize="large" color="secondary" />}
               title="Monthly Revenue"
-              content="2 481 $US"
+              content={computeMonthlyRevenue(monthlyOrders.data)}
             />
           </Card>
         </Box>
@@ -73,7 +83,9 @@ export const Dashboard = () => {
             <DashboardCardHeader
               icon={<ShoppingCartIcon fontSize="large" color="secondary" />}
               title="New Orders"
-              content="17"
+              content={String(
+                monthlyOrders.data ? monthlyOrders.data.length : 0
+              )}
             />
           </Card>
         </Box>

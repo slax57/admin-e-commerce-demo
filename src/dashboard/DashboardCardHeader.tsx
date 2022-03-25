@@ -16,7 +16,11 @@ export const DashboardCardHeader = (props: {
     <Grid item>{props.icon}</Grid>
     <Grid item>
       <Stack>
-        <Typography variant="subtitle1" color="text.secondary">
+        <Typography
+          variant="subtitle1"
+          color="text.secondary"
+          textAlign="right"
+        >
           {props.title}
         </Typography>
         <Typography variant="h5" textAlign="right">
