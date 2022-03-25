@@ -31,7 +31,7 @@ import { RichTextInput } from "ra-input-rich-text";
 import { Poster } from "./product";
 import { Category } from "../category/category";
 import CustomerField from "../customer/CustomerField";
-import { Rating } from "../review/Rating";
+import { RatingField } from "../review/RatingField";
 
 const ProductTitle = () => {
   const record = useRecordContext();
@@ -151,9 +151,7 @@ const ProductEditForm = () => {
             <ReferenceField source="customer_id" reference="customers">
               <CustomerField />
             </ReferenceField>
-            <WrapperField label="Rating" sortBy="rating">
-              <Rating />
-            </WrapperField>
+            <RatingField label="Rating" sortBy="rating" />
             <WrapperField label="Comment">
               <Box
                 component="div"
