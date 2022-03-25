@@ -5,14 +5,14 @@ import {
   Container,
   Box,
   Divider,
+  Avatar,
 } from "@mui/material";
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import CommentIcon from "@mui/icons-material/Comment";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import { DashboardCardHeader } from "./DashboardCardHeader";
-import { useGetList, ListContextProvider, Datagrid } from "react-admin";
-import CustomerField from "../customer/CustomerField";
+import { useGetList, SimpleList } from "react-admin";
 import { Customer } from "../customer/customer";
 
 const cardSx = {
@@ -89,12 +89,19 @@ export const Dashboard = () => {
                 content={String(newCustomers.total)}
               />
               <Divider />
-              {newCustomers.data &&
-                newCustomers.data.map((customer) => (
-                  <Box sx={{ margin: 2 }}>
-                    <CustomerField key={customer.id} record={customer} />
-                  </Box>
-                ))}
+              <SimpleList
+                data={newCustomers.data}
+                resource="customers"
+                primaryText={(customer) =>
+                  `${customer.first_name} ${customer.last_name}`
+                }
+                leftAvatar={(customer) => (
+                  <Avatar
+                    alt={`${customer.first_name} ${customer.last_name}`}
+                    src={customer.avatar}
+                  />
+                )}
+              />
             </CardContent>
           </Card>
         </Box>
