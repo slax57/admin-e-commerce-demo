@@ -7,13 +7,21 @@ import {
   Divider,
   Avatar,
   Button,
+  Typography,
 } from "@mui/material";
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import CommentIcon from "@mui/icons-material/Comment";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import { DashboardCardHeader } from "./DashboardCardHeader";
-import { useGetList, SimpleList, Link, useGetMany } from "react-admin";
+import {
+  useGetList,
+  SimpleList,
+  Link,
+  useGetMany,
+  NumberField,
+  DateField,
+} from "react-admin";
 import { Customer } from "../customer/customer";
 import { Command } from "../command/command";
 import { Review } from "../review/review";
@@ -39,6 +47,20 @@ const computeMonthlyRevenue = function (monthlyOrders?: Command[]): number {
       .reduce((prev, cur) => prev + cur, 0);
   }
   return amount;
+};
+
+const computeBasketSize = (command: Command): number => {
+  return command.basket.reduce((prev, cur) => prev + cur.quantity, 0);
+};
+const itemSuffixes = new Map([
+  ["one", "item"],
+  ["other", "items"],
+]);
+const pr = new Intl.PluralRules();
+const formatBasket = (command: Command): string => {
+  const rule = pr.select(computeBasketSize(command));
+  const suffix = itemSuffixes.get(rule);
+  return `${computeBasketSize(command)} ${suffix}`;
 };
 
 export const Dashboard = () => {
@@ -176,7 +198,43 @@ export const Dashboard = () => {
 
         <Box gridColumn="span 2">
           <Card component={Paper} sx={cardSx}>
-            <CardContent>Pending Orders</CardContent>
+            <Typography variant="h5" padding={2}>
+              Pending Orders
+            </Typography>
+            <SimpleList
+              data={pendingOrders}
+              resource="commands"
+              primaryText={(order) => <DateField source="date" showTime />}
+              secondaryText={(order) => {
+                if (!newCustomers.data) return null;
+                const customer = newCustomers.data.find(
+                  (authors) => authors.id === order.customer_id
+                );
+                if (!customer) return null;
+                return `by ${customer.first_name} ${
+                  customer.last_name
+                }, ${formatBasket(order)}`;
+              }}
+              tertiaryText={(order) => (
+                <NumberField
+                  source="total"
+                  options={{ style: "currency", currency: "USD" }}
+                />
+              )}
+              leftAvatar={(order) => {
+                if (!newCustomers.data) return null;
+                const customer = newCustomers.data.find(
+                  (authors) => authors.id === order.customer_id
+                );
+                if (!customer) return null;
+                return (
+                  <Avatar
+                    alt={`${customer.first_name} ${customer.last_name}`}
+                    src={customer.avatar}
+                  />
+                );
+              }}
+            />
           </Card>
         </Box>
       </Box>
