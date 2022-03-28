@@ -4,6 +4,7 @@ import fakeDataProvider from "ra-data-fakerest";
 import generateData from "data-generator-retail";
 import commands from "./command";
 import products from "./product";
+import { Dashboard } from "./dashboard/Dashboard";
 
 const dataProvider = fakeDataProvider(
   generateData({ serializeDate: true }),
@@ -12,11 +13,12 @@ const dataProvider = fakeDataProvider(
 
 function App() {
   return (
-    <Admin dataProvider={dataProvider}>
+    <Admin dataProvider={dataProvider} dashboard={Dashboard}>
       <Resource name="products" {...products} />
       <Resource name="commands" {...commands} />
       <Resource name="categories" />
       <Resource name="reviews" />
+      <Resource name="customers" />
     </Admin>
   );
 }
